@@ -1,23 +1,14 @@
-import socket
+import serial
 
-HOST = "127.0.0.1"
-PORT = 5001
+port = "/dev/ttyUSB0"
+baudrate = 115200
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((HOST, PORT))
-server.listen(1)
+rov = serial.Serial(port, baudrate, timeout=1)
 
-print("Waiting for connection...")
-
-connection, address = server.accept()
-print("Connected!")
+print("Waiting for data...")
 
 while True:
-    data = connection.recv(1024).decode()
+    data = rov.readline().decode().strip()
 
-    if not data:
-        break
-
-    print("Received:", data)
-connection.close()
-server.close()
+    if data:
+        print("Received:", data)
